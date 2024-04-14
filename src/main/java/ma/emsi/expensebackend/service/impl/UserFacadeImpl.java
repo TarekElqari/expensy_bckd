@@ -22,8 +22,6 @@ public class UserFacadeImpl implements UserFacade {
     @Autowired
     private final RoleRepository roleRepository;
 
-
-    @Autowired
     public UserFacadeImpl(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
