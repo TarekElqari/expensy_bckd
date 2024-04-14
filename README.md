@@ -2,15 +2,6 @@ For swagger -> http://localhost:8080/swagger-ui/index.html#
 
 ###Pour la contribution 
 
-1. **Cloner le projet depuis GitHub** :
-   ```bash
-   git clone https://github.com/Anassidbella/OptiDecision
-   ```
-
-2. **Se déplacer vers le répertoire du projet** :
-   ```bash
-   cd OptiDecision
-   ```
 
 3. **Créer une nouvelle branche pour chaque nouvelle tâche ou modification** :
    ```bash
