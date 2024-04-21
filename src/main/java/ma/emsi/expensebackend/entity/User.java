@@ -1,10 +1,8 @@
 package ma.emsi.expensebackend.entity;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Data
@@ -16,12 +14,12 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private String role; 
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<Role> roles;
+    public User(String username, String password, String email, String role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
 }
