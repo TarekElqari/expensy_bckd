@@ -7,20 +7,28 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Budget {
+public class Depense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "date_depot")
-    private LocalDate dateDepot;
+    private String nom;
+    
+    @Column(name = "date_depense")
+    private LocalDate dateDepense;
 
-    private double montant;
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Categorie categorie;
 
 }

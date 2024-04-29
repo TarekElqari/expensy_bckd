@@ -1,19 +1,14 @@
 package ma.emsi.expensebackend.entity;
 
-import java.time.LocalDate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Budget {
+public class Depot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,3 +19,5 @@ public class Budget {
     private double montant;
 
 }
+
+

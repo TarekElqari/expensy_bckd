@@ -3,20 +3,24 @@ package ma.emsi.expensebackend.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class RecurringExpense {
+public class DepenseRecursive {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private double amount;
+
+    private double montant;
+
     @Enumerated(EnumType.STRING)
-    private Frequency frequency;
-    private Date nextOccurrence;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Frequence frequence;
+
+    @Column(name = "date_prochaine_occurrence")
+    private LocalDate dateProchaineOccurrence;
+
+    // Getters and setters
 }
