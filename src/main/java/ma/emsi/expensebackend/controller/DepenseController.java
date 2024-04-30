@@ -39,4 +39,11 @@ public class DepenseController {
     public List<Depense> getAllDepenses(){
        return depenseFacadeImpl.getAllDepenses();
     }
+    @PostMapping("/ajouter")
+    public ResponseEntity<Depense> ajouterDepense(@RequestBody Depense depense) {
+        // Ajouter la dépense à la base de données
+        Depense nouvelleDepense = depenseFacadeImpl.ajouterDepense(depense);
+        return ResponseEntity.ok().body(nouvelleDepense);
+    }
+    
 }

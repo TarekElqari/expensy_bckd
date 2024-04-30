@@ -9,4 +9,5 @@ public interface BudgetFacade {
     void deleteBudget(Long budgetId);
     Budget updateBudget(Budget budget);
     List<Budget> getAllBudgets(); 
+    Budget ajouterBudget(Budget budget);
 }
