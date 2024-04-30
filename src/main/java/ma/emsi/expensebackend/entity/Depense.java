@@ -27,6 +27,8 @@ public class Depense {
 
     private String description;
 
+    private double montant;
+    
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Categorie categorie;

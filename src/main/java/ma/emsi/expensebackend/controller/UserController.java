@@ -1,12 +1,22 @@
 package ma.emsi.expensebackend.controller;
 
 import ma.emsi.expensebackend.entity.User;
+import ma.emsi.expensebackend.service.impl.PasswordHashingService;
 import ma.emsi.expensebackend.service.impl.UserFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpSession;
+
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -14,11 +24,29 @@ public class UserController {
     @Autowired
     public UserFacadeImpl userFacadeImpl;
 
+    @Autowired
+    private PasswordHashingService passwordHashingService;
+    
+    private static final Logger logger = LoggerFactory.getLogger(UserFacadeImpl.class);
+
+    
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userFacadeImpl.saveUser(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        try {
+            // Hashage du mot de passe avant de l'enregistrer
+            String hashedPassword = passwordHashingService.hashPassword(user.getPassword());
+            user.setPassword(hashedPassword);
+            
+            // Enregistrer l'utilisateur avec le mot de passe hashé
+            User savedUser = userFacadeImpl.saveUser(user);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        } catch (NoSuchAlgorithmException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long userId) {
@@ -39,4 +67,42 @@ public class UserController {
     public List<User> getAll(){
        return userFacadeImpl.getAll();
     }
+    @GetMapping("/secure-resource")
+    public ResponseEntity<String> secureResource(HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Non authentifié");
+        } else {
+            // Accéder à la ressource sécurisée
+            return ResponseEntity.ok("Ressource sécurisée accessible");
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody User user, HttpSession session) {
+        Optional<User> optionalUser = userFacadeImpl.getUserByUsername(user.getUsername());
+        if (optionalUser.isPresent()) {
+            logger.info("User found: " + user.getUsername());
+            User existingUser = optionalUser.get();
+            try {
+                if (passwordHashingService.verifyPassword(user.getPassword(), existingUser.getPassword())) {
+                    session.setAttribute("userId", existingUser);
+                	return new ResponseEntity<>("Connexion réussie", HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Mot de passe incorrect", HttpStatus.UNAUTHORIZED);
+                }
+            } catch (NoSuchAlgorithmException e) {
+                return new ResponseEntity<>("Erreur de hachage du mot de passe", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            logger.info("No user found with username: " + user.getUsername());
+            return new ResponseEntity<>("Utilisateur non trouvé", HttpStatus.NOT_FOUND);
+        }
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session) {
+        session.invalidate(); // Invalide la session
+        return ResponseEntity.ok("Déconnexion réussie");
+    }
+
 }
