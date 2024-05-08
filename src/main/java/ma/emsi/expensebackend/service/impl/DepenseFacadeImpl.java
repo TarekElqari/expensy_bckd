@@ -2,6 +2,8 @@ package ma.emsi.expensebackend.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import ma.emsi.expensebackend.entity.Budget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ma.emsi.expensebackend.entity.Depense;
@@ -14,8 +16,12 @@ public class DepenseFacadeImpl implements DepenseFacade {
     @Autowired
     private final DepenseRepository depenseRepository;
 
-    public DepenseFacadeImpl(DepenseRepository depenseRepository) {
+    @Autowired
+    private final BudgetFacadeImpl budgetFacadeImpl;
+
+    public DepenseFacadeImpl(DepenseRepository depenseRepository, BudgetFacadeImpl budgetFacadeImpl) {
         this.depenseRepository = depenseRepository;
+        this.budgetFacadeImpl = budgetFacadeImpl;
     }
 
     @Override
@@ -50,10 +56,18 @@ public class DepenseFacadeImpl implements DepenseFacade {
         if (dateDepense.isAfter(currentDate)) {
             throw new IllegalArgumentException("La date de la dépense ne peut pas être dans le futur.");
         }
+        Budget budget = budgetFacadeImpl.findFirstByOrderById();
+        if (budget == null) {
+            budget = new Budget();
+            budget.setMontant(0);
+            budgetFacadeImpl.ajouterBudget(budget);
+        }
 
-        // Vous pouvez ajouter d'autres vérifications ou calculs ici
+        if (budget.getMontant() > depense.getMontant()) {
+            budget.setMontant(budget.getMontant() - depense.getMontant());
+            budgetFacadeImpl.ajouterBudget(budget);
 
-        // Enregistrer la dépense dans la base de données
+        }
         return depenseRepository.save(depense);
     }
 

@@ -1,6 +1,8 @@
 package ma.emsi.expensebackend.service.impl;
 
 import java.util.List;
+
+import ma.emsi.expensebackend.entity.Budget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ma.emsi.expensebackend.entity.Depot;
@@ -13,12 +15,24 @@ public class DepotFacadeImpl implements DepotFacade {
     @Autowired
     private final DepotRepository depotRepository;
 
-    public DepotFacadeImpl(DepotRepository depotRepository) {
+    @Autowired
+    private final BudgetFacadeImpl budgetFacadeImpl;
+
+    public DepotFacadeImpl(DepotRepository depotRepository, BudgetFacadeImpl budgetFacadeImpl) {
         this.depotRepository = depotRepository;
+        this.budgetFacadeImpl = budgetFacadeImpl;
     }
 
     @Override
     public Depot saveDepot(Depot depot) {
+        Budget budget = budgetFacadeImpl.findFirstByOrderById();
+        if (budget == null) {
+            budget = new Budget();
+            budget.setMontant(0);
+            budgetFacadeImpl.ajouterBudget(budget);
+        }
+            budget.setMontant(budget.getMontant() + depot.getMontant());
+            budgetFacadeImpl.ajouterBudget(budget);
         return depotRepository.save(depot);
     }
 

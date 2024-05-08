@@ -5,9 +5,10 @@ import java.util.List;
 import ma.emsi.expensebackend.entity.Budget;
 
 public interface BudgetFacade {
-    Budget saveBudget(Budget budget);
     void deleteBudget(Long budgetId);
     Budget updateBudget(Budget budget);
     List<Budget> getAllBudgets(); 
     Budget ajouterBudget(Budget budget);
+
+    Budget findFirstByOrderById();
 }

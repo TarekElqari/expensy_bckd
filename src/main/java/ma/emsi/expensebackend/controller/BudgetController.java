@@ -17,7 +17,7 @@ public class BudgetController {
 
     @PostMapping
     public ResponseEntity<Budget> createBudget(@RequestBody Budget budget) {
-        Budget savedBudget = budgetFacadeImpl.saveBudget(budget);
+        Budget savedBudget = budgetFacadeImpl.ajouterBudget(budget);
         return new ResponseEntity<>(savedBudget, HttpStatus.CREATED);
     }
 
