@@ -20,11 +20,6 @@ public class BudgetFacadeImpl implements BudgetFacade {
     }
 
     @Override
-    public Budget saveBudget(Budget budget) {
-        return budgetRepository.save(budget);
-    }
-
-    @Override
     public void deleteBudget(Long budgetId) {
         budgetRepository.deleteById(budgetId);
     }
@@ -39,7 +34,7 @@ public class BudgetFacadeImpl implements BudgetFacade {
         return budgetRepository.findAll();
     }
     @Override
-    public Budget ajouterBudget(Budget budget) {
+    public Budget ajouterBudget(Budget budget) { //save
         // Vérifier si le montant du budget est valide (supérieur à zéro)
         if (budget.getMontant() <= 0) {
             throw new IllegalArgumentException("Le montant du budget doit être supérieur à zéro.");
@@ -51,11 +46,12 @@ public class BudgetFacadeImpl implements BudgetFacade {
         if (dateDepot.isBefore(currentDate)) {
             throw new IllegalArgumentException("La date de dépôt du budget doit être dans le futur.");
         }
-
-        // Vous pouvez ajouter d'autres vérifications ou calculs ici
-
-        // Enregistrer le budget dans la base de données
         return budgetRepository.save(budget);
     }
-    
+
+    @Override
+    public Budget findFirstByOrderById() {
+        return budgetRepository.findFirstByOrderById();
+    }
+
 }

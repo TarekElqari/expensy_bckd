@@ -6,4 +6,6 @@ import ma.emsi.expensebackend.entity.Budget;
 
 @Repository
 public interface BudgetRepository extends JpaRepository<Budget, Long> {
+
+    public Budget findFirstByOrderById();
 }
