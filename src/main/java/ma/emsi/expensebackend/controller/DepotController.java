@@ -20,6 +20,15 @@ public class DepotController {
         return new ResponseEntity<>(savedDepot, HttpStatus.CREATED);
     }
 
+    @PostMapping("/create-list")
+    public ResponseEntity<Depot> createListDepot(@RequestBody List<Depot> depot) {
+        Depot savedDepot = null;
+        for (Depot dp : depot) {
+            savedDepot = depotFacadeImpl.saveDepot(dp);
+        }
+        return new ResponseEntity<>(savedDepot, HttpStatus.CREATED);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDepot(@PathVariable("id") Long depotId) {
         depotFacadeImpl.deleteDepot(depotId);

@@ -3,6 +3,8 @@ package ma.emsi.expensebackend.export;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.*;
@@ -25,7 +27,12 @@ public class ExcelExporter {
                 exportDir.mkdirs();
             }
 
-            String filePath = EXPORT_DIRECTORY + "expenses.xlsx";
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+            String formattedDateTime = currentDateTime.format(formatter);
+            String fileName = "expenses_" + formattedDateTime + ".xlsx";
+
+            String filePath = EXPORT_DIRECTORY + fileName;
             try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
                 workbook.write(outputStream);
             }

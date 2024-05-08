@@ -1,6 +1,7 @@
 package ma.emsi.expensebackend.controller;
 
 import ma.emsi.expensebackend.entity.Depense;
+import ma.emsi.expensebackend.entity.Depot;
 import ma.emsi.expensebackend.service.impl.DepenseFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,15 @@ public class DepenseController {
     @PostMapping
     public ResponseEntity<Depense> createDepense(@RequestBody Depense depense) {
         Depense savedDepense = depenseFacadeImpl.saveDepense(depense);
+        return new ResponseEntity<>(savedDepense, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/create-list")
+    public ResponseEntity<Depense> createListDepot(@RequestBody List<Depense> depense) {
+        Depense savedDepense = null;
+        for (Depense dps : depense) {
+            savedDepense = depenseFacadeImpl.ajouterDepense(dps);
+        }
         return new ResponseEntity<>(savedDepense, HttpStatus.CREATED);
     }
 
