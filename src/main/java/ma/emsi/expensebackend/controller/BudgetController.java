@@ -47,4 +47,9 @@ public class BudgetController {
         return ResponseEntity.ok().body(nouveauBudget);
     }
 
+    @GetMapping("/getFirstByOrder")
+    public Budget getFirstByOrderById(){
+        return budgetFacadeImpl.findFirstByOrderById();
+    }
+
 }

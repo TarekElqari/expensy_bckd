@@ -1,6 +1,7 @@
 package ma.emsi.expensebackend.controller;
 
 import ma.emsi.expensebackend.entity.Categorie;
+import ma.emsi.expensebackend.entity.Depense;
 import ma.emsi.expensebackend.service.impl.CategorieFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,14 @@ public class CategorieController {
     @PostMapping
     public ResponseEntity<Categorie> createCategorie(@RequestBody Categorie categorie) {
         Categorie savedCategorie = categorieFacadeImpl.saveCategorie(categorie);
+        return new ResponseEntity<>(savedCategorie, HttpStatus.CREATED);
+    }
+    @PostMapping("/create-list")
+    public ResponseEntity<Categorie> createListCategorie(@RequestBody List<Categorie> categorie) {
+        Categorie savedCategorie = null;
+        for (Categorie ctg : categorie) {
+            savedCategorie = categorieFacadeImpl.saveCategorie(ctg);
+        }
         return new ResponseEntity<>(savedCategorie, HttpStatus.CREATED);
     }
 
