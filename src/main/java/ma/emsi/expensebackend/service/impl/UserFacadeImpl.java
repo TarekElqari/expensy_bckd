@@ -49,11 +49,23 @@ public class UserFacadeImpl implements UserFacade {
     public Optional<User> getUserByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
-            logger.info("Found user(s) with username: " + username);
+            logger.info("Found user(s) with username: " + username+"id"+user.get());
         } else {
             logger.info("No user found with username: " + username);
         }
         return user;
     }
+    
+    @Override
+    public Optional<User> getUserById(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            logger.info("Found user(s) with id: " + userId);
+        } else {
+            logger.info("No user found with id: " + userId);
+        }
+        return user;
+    }
+
 
 }

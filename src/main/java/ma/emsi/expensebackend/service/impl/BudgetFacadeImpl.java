@@ -12,9 +12,9 @@ import ma.emsi.expensebackend.service.facade.BudgetFacade;
 @Service
 public class BudgetFacadeImpl implements BudgetFacade {
 
-    @Autowired
     private final BudgetRepository budgetRepository;
 
+    @Autowired
     public BudgetFacadeImpl(BudgetRepository budgetRepository) {
         this.budgetRepository = budgetRepository;
     }
@@ -33,6 +33,7 @@ public class BudgetFacadeImpl implements BudgetFacade {
     public List<Budget> getAllBudgets() {
         return budgetRepository.findAll();
     }
+    
     @Override
     public Budget ajouterBudget(Budget budget) { //save
         // Vérifier si le montant du budget est valide (supérieur à zéro)
@@ -40,14 +41,20 @@ public class BudgetFacadeImpl implements BudgetFacade {
             throw new IllegalArgumentException("Le montant du budget doit être supérieur à zéro.");
         }
 
+        // Initialiser la date de dépôt à la date actuelle si elle n'est pas définie
+        if (budget.getDateDepot() == null) {
+            budget.setDateDepot(LocalDate.now());
+        }
+
         // Vérifier si la date de dépôt est valide (par exemple, ne pas être dans le passé)
         LocalDate dateDepot = budget.getDateDepot();
-        LocalDate currentDate = LocalDate.now();
-        if (dateDepot.isBefore(currentDate)) {
+        if (dateDepot.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("La date de dépôt du budget doit être dans le futur.");
         }
+        
         return budgetRepository.save(budget);
     }
+
 
     @Override
     public Budget findFirstByOrderById() {

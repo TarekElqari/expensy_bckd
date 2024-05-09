@@ -82,12 +82,18 @@ public class UserController {
     public ResponseEntity<String> loginUser(@RequestBody User user, HttpSession session) {
         Optional<User> optionalUser = userFacadeImpl.getUserByUsername(user.getUsername());
         if (optionalUser.isPresent()) {
-            logger.info("User found: " + user.getUsername());
             User existingUser = optionalUser.get();
             try {
                 if (passwordHashingService.verifyPassword(user.getPassword(), existingUser.getPassword())) {
-                    session.setAttribute("userId", existingUser);
-                	return new ResponseEntity<>("Connexion réussie", HttpStatus.OK);
+                    // Maintenant que le mot de passe est vérifié, récupérez l'ID de l'utilisateur
+                    Long userId = existingUser.getId();
+                    if (userId != null) {
+                        // Définir l'ID de l'utilisateur dans la session
+                        session.setAttribute("userId", userId);
+                        return new ResponseEntity<>("Connexion réussie", HttpStatus.OK);
+                    } else {
+                        return new ResponseEntity<>("ID de l'utilisateur non trouvé", HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
                 } else {
                     return new ResponseEntity<>("Mot de passe incorrect", HttpStatus.UNAUTHORIZED);
                 }
@@ -99,9 +105,20 @@ public class UserController {
             return new ResponseEntity<>("Utilisateur non trouvé", HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/isAuthenticated")
+    public ResponseEntity<Boolean> isAuthenticated(HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        if (userId != null) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.ok(false);
+        }
+    }
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
-        session.invalidate(); // Invalide la session
+        session.invalidate();
+        // Invalide la session
         return ResponseEntity.ok("Déconnexion réussie");
     }
 

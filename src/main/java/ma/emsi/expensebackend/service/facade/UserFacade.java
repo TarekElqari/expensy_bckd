@@ -10,4 +10,6 @@ public interface UserFacade {
     User updateUser(User user);
     List<User> getAll(); 
     Optional<User> getUserByUsername(String username);
+    Optional<User> getUserById(Long userId);
+
 }
