@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -79,46 +81,34 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User user, HttpSession session) {
+    public ResponseEntity<Object> loginUser(@RequestBody User user, HttpSession session) {
         Optional<User> optionalUser = userFacadeImpl.getUserByUsername(user.getUsername());
         if (optionalUser.isPresent()) {
+            logger.info("User found: " + user.getUsername());
             User existingUser = optionalUser.get();
             try {
                 if (passwordHashingService.verifyPassword(user.getPassword(), existingUser.getPassword())) {
-                    // Maintenant que le mot de passe est vérifié, récupérez l'ID de l'utilisateur
-                    Long userId = existingUser.getId();
-                    if (userId != null) {
-                        // Définir l'ID de l'utilisateur dans la session
-                        session.setAttribute("userId", userId);
-                        return new ResponseEntity<>("Connexion réussie", HttpStatus.OK);
-                    } else {
-                        return new ResponseEntity<>("ID de l'utilisateur non trouvé", HttpStatus.INTERNAL_SERVER_ERROR);
-                    }
+                    session.setAttribute("user", existingUser); // Storing user object in a session
+                    logger.info("session " + session.getAttribute("user").toString());
+                    Map<String, Object> responseData = new HashMap<>();
+                    responseData.put("user", existingUser);
+                    responseData.put("message", "Connexion réussie");
+                    return ResponseEntity.ok(responseData);
                 } else {
-                    return new ResponseEntity<>("Mot de passe incorrect", HttpStatus.UNAUTHORIZED);
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mot de passe incorrect");
                 }
             } catch (NoSuchAlgorithmException e) {
-                return new ResponseEntity<>("Erreur de hachage du mot de passe", HttpStatus.INTERNAL_SERVER_ERROR);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur de hachage du mot de passe");
             }
         } else {
             logger.info("No user found with username: " + user.getUsername());
-            return new ResponseEntity<>("Utilisateur non trouvé", HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur non trouvé");
         }
     }
 
-    @GetMapping("/isAuthenticated")
-    public ResponseEntity<Boolean> isAuthenticated(HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId != null) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.ok(false);
-        }
-    }
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
-        session.invalidate();
-        // Invalide la session
+        session.invalidate(); // Invalide la session
         return ResponseEntity.ok("Déconnexion réussie");
     }
 
