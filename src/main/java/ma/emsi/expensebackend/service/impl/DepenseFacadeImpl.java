@@ -45,24 +45,16 @@ public class DepenseFacadeImpl implements DepenseFacade {
     }
     
     @Override
-    public Depense ajouterDepense(Depense depense) {
+    public Depense ajouterDepense(Depense depense, Long userId) {
         if (depense.getMontant() <= 0) {
             throw new IllegalArgumentException("Le montant de la dépense doit être supérieur à zéro.");
         }
-
         LocalDate dateDepense = depense.getDateDepense();
         LocalDate currentDate = LocalDate.now();
         if (dateDepense.isAfter(currentDate)) {
             throw new IllegalArgumentException("La date de la dépense ne peut pas être dans le futur.");
         }
-
-        Budget budget = budgetFacadeImpl.findFirstByOrderById();
-        if (budget == null) {
-            budget = new Budget();
-            budget.setMontant(0);
-            budgetFacadeImpl.ajouterBudget(budget);
-        }
-
+        Budget budget = budgetFacadeImpl.findBudgetByUserId(userId);
         if (budget.getMontant() < depense.getMontant()) {
             throw new IllegalArgumentException("Le montant de la dépense dépasse le budget disponible.");
         }

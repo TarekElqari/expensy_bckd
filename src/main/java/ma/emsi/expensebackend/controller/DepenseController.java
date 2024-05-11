@@ -15,17 +15,17 @@ public class DepenseController {
     @Autowired
     public DepenseFacadeImpl depenseFacadeImpl;
 
-    @PostMapping
-    public ResponseEntity<Depense> createDepense(@RequestBody Depense depense) {
-        Depense savedDepense = depenseFacadeImpl.saveDepense(depense);
+    @PostMapping("/{userId}")
+    public ResponseEntity<Depense> createDepense(@RequestBody Depense depense, @PathVariable Long userId) {
+        Depense savedDepense = depenseFacadeImpl.ajouterDepense(depense, userId);
         return new ResponseEntity<>(savedDepense, HttpStatus.CREATED);
     }
 
-    @PostMapping("/create-list")
-    public ResponseEntity<Depense> createListDepot(@RequestBody List<Depense> depense) {
+    @PostMapping("/create-list/{userId}")
+    public ResponseEntity<Depense> createListDepot(@RequestBody List<Depense> depense, @PathVariable Long userId) {
         Depense savedDepense = null;
         for (Depense dps : depense) {
-            savedDepense = depenseFacadeImpl.ajouterDepense(dps);
+            savedDepense = depenseFacadeImpl.ajouterDepense(dps, userId);
         }
         return new ResponseEntity<>(savedDepense, HttpStatus.CREATED);
     }
@@ -49,10 +49,9 @@ public class DepenseController {
     public List<Depense> getAllDepenses(){
        return depenseFacadeImpl.getAllDepenses();
     }
-    @PostMapping("/ajouter")
-    public ResponseEntity<Depense> ajouterDepense(@RequestBody Depense depense) {
-        // Ajouter la dépense à la base de données
-        Depense nouvelleDepense = depenseFacadeImpl.ajouterDepense(depense);
+    @PostMapping("/ajouter/{userId}")
+    public ResponseEntity<Depense> ajouterDepense(@RequestBody Depense depense, Long userId) {
+        Depense nouvelleDepense = depenseFacadeImpl.ajouterDepense(depense, userId);
         return ResponseEntity.ok().body(nouvelleDepense);
     }
     

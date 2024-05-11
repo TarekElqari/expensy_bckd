@@ -24,20 +24,16 @@ import java.util.Optional;
 public class BudgetController {
     @Autowired
     public BudgetFacadeImpl budgetFacadeImpl;
-    
-    @Autowired
-    private UserFacadeImpl userFacadeImpl;
-    
+
     private static final Logger logger = LoggerFactory.getLogger(BudgetFacadeImpl.class);
 
     @PostMapping
-    public ResponseEntity<Budget> createBudget(@RequestBody Budget budget, HttpSession session) {
+    public ResponseEntity<Budget> createBudget(@RequestBody Budget budget) {
         // Récupérer l'ID de l'utilisateur à partir de la session
         // Initialiser la date de dépôt à la date actuelle si elle n'est pas définie
         if (budget.getDateDepot() == null) {
             budget.setDateDepot(LocalDate.now());
         }
-
         // Enregistrer le budget
         Budget savedBudget = budgetFacadeImpl.ajouterBudget(budget);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBudget);
@@ -78,7 +74,6 @@ public class BudgetController {
     
     @GetMapping("/getBudgetByUser/{userId}")
     public ResponseEntity<Budget> getBudgetByUser(@PathVariable("userId") Long userId) {
-        // Utiliser l'ID de l'utilisateur pour récupérer le budget associé
         Budget existingBudget = budgetFacadeImpl.findBudgetByUserId(userId);
         if (existingBudget != null) {
             return ResponseEntity.ok(existingBudget);

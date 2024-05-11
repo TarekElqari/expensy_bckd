@@ -14,17 +14,17 @@ public class DepotController {
     @Autowired
     public DepotFacadeImpl depotFacadeImpl;
 
-    @PostMapping
-    public ResponseEntity<Depot> createDepot(@RequestBody Depot depot) {
-        Depot savedDepot = depotFacadeImpl.saveDepot(depot);
+    @PostMapping("/{userId}")
+    public ResponseEntity<Depot> createDepot(@RequestBody Depot depot, @PathVariable Long userId) {
+        Depot savedDepot = depotFacadeImpl.saveDepot(depot, userId);
         return new ResponseEntity<>(savedDepot, HttpStatus.CREATED);
     }
 
-    @PostMapping("/create-list")
-    public ResponseEntity<Depot> createListDepot(@RequestBody List<Depot> depot) {
+    @PostMapping("/create-list/{userId}")
+    public ResponseEntity<Depot> createListDepot(@RequestBody List<Depot> depot, @PathVariable Long userId) {
         Depot savedDepot = null;
         for (Depot dp : depot) {
-            savedDepot = depotFacadeImpl.saveDepot(dp);
+            savedDepot = depotFacadeImpl.saveDepot(dp, userId);
         }
         return new ResponseEntity<>(savedDepot, HttpStatus.CREATED);
     }
