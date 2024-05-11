@@ -1,13 +1,13 @@
 package ma.emsi.expensebackend.controller;
 
 import ma.emsi.expensebackend.entity.Categorie;
-import ma.emsi.expensebackend.entity.Depense;
 import ma.emsi.expensebackend.service.impl.CategorieFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/categorie")
@@ -47,5 +47,10 @@ public class CategorieController {
     @GetMapping("/categories")
     public List<Categorie> getAllCategories(){
        return categorieFacadeImpl.getAllCategories();
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Categorie> findById(@PathVariable("id") Long categorieId) {
+       return categorieFacadeImpl.findById(categorieId);
     }
 }

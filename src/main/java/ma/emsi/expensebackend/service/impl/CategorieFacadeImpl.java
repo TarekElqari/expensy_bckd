@@ -1,6 +1,8 @@
 package ma.emsi.expensebackend.service.impl;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ma.emsi.expensebackend.entity.Categorie;
@@ -36,4 +38,11 @@ public class CategorieFacadeImpl implements CategorieFacade {
     public List<Categorie> getAllCategories() {
         return categorieRepository.findAll();
     }
+
+    @Override
+    public Optional<Categorie> findById(Long id) {
+        return categorieRepository.findById(id);
+    }
+
+
 }

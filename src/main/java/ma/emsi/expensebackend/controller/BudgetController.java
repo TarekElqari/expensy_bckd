@@ -29,8 +29,6 @@ public class BudgetController {
 
     @PostMapping
     public ResponseEntity<Budget> createBudget(@RequestBody Budget budget) {
-        // Récupérer l'ID de l'utilisateur à partir de la session
-        // Initialiser la date de dépôt à la date actuelle si elle n'est pas définie
         if (budget.getDateDepot() == null) {
             budget.setDateDepot(LocalDate.now());
         }

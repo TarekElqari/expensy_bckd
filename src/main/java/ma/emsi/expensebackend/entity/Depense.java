@@ -33,4 +33,7 @@ public class Depense {
     @JoinColumn(name = "category_id")
     private Categorie categorie;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
