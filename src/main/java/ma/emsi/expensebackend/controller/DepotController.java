@@ -13,7 +13,6 @@ import java.util.List;
 public class DepotController {
     @Autowired
     public DepotFacadeImpl depotFacadeImpl;
-
     @PostMapping("/{userId}")
     public ResponseEntity<Depot> createDepot(@RequestBody Depot depot, @PathVariable Long userId) {
         Depot savedDepot = depotFacadeImpl.saveDepot(depot, userId);

@@ -1,5 +1,6 @@
 package ma.emsi.expensebackend.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import ma.emsi.expensebackend.entity.Budget;
@@ -26,10 +27,13 @@ public class DepotFacadeImpl implements DepotFacade {
     @Override
     public Depot saveDepot(Depot depot, Long userId) {
         Budget budget = budgetFacadeImpl.findBudgetByUserId(userId);
-            budget.setMontant(budget.getMontant() + depot.getMontant());
-            budgetFacadeImpl.ajouterBudget(budget);
+        depot.setDateDepot(LocalDate.now());
+        budget.setMontant(budget.getMontant() + depot.getMontant());
+        budgetFacadeImpl.ajouterBudget(budget);
+
         return depotRepository.save(depot);
     }
+
 
     @Override
     public void deleteDepot(Long depotId) {

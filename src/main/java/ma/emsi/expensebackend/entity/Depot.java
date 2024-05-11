@@ -18,6 +18,10 @@ public class Depot {
 
     private double montant;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }
 
 
