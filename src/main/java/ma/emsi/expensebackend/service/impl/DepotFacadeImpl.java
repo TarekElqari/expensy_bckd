@@ -24,13 +24,8 @@ public class DepotFacadeImpl implements DepotFacade {
     }
 
     @Override
-    public Depot saveDepot(Depot depot) {
-        Budget budget = budgetFacadeImpl.findFirstByOrderById();
-        if (budget == null) {
-            budget = new Budget();
-            budget.setMontant(0);
-            budgetFacadeImpl.ajouterBudget(budget);
-        }
+    public Depot saveDepot(Depot depot, Long userId) {
+        Budget budget = budgetFacadeImpl.findBudgetByUserId(userId);
             budget.setMontant(budget.getMontant() + depot.getMontant());
             budgetFacadeImpl.ajouterBudget(budget);
         return depotRepository.save(depot);

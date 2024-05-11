@@ -8,5 +8,5 @@ public interface DepenseFacade {
     void deleteDepense(Long depenseId);
     Depense updateDepense(Depense depense);
     List<Depense> getAllDepenses();
-	Depense ajouterDepense(Depense depense); 
+	Depense ajouterDepense(Depense depense, Long id);
 }
