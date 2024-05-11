@@ -60,5 +60,16 @@ public class BudgetFacadeImpl implements BudgetFacade {
     public Budget findFirstByOrderById() {
         return budgetRepository.findFirstByOrderById();
     }
-
+    
+    @Override
+    public Budget findBudgetByUserId(long id) {
+    	List<Budget> budgets = budgetRepository.findAll();
+    	for (Budget budget : budgets) {
+			if(budget.getUser().getId() == id) {
+				return budget;
+			}
+		}
+    	return null;
+    }
+    
 }
