@@ -1,4 +1,4 @@
-package ma.emsi.expensebackend.service.impl;
+package ma.emsi.expensebackend.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

@@ -1,7 +1,7 @@
 package ma.emsi.expensebackend.controller;
 
 import ma.emsi.expensebackend.entity.User;
-import ma.emsi.expensebackend.service.impl.PasswordHashingService;
+import ma.emsi.expensebackend.utils.PasswordHashingService;
 import ma.emsi.expensebackend.service.impl.UserFacadeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,11 +35,8 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
-            // Hashage du mot de passe avant de l'enregistrer
             String hashedPassword = passwordHashingService.hashPassword(user.getPassword());
             user.setPassword(hashedPassword);
-            
-            // Enregistrer l'utilisateur avec le mot de passe hashé
             User savedUser = userFacadeImpl.saveUser(user);
             
             return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
@@ -75,7 +72,6 @@ public class UserController {
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Non authentifié");
         } else {
-            // Accéder à la ressource sécurisée
             return ResponseEntity.ok("Ressource sécurisée accessible");
         }
     }
@@ -88,7 +84,7 @@ public class UserController {
             User existingUser = optionalUser.get();
             try {
                 if (passwordHashingService.verifyPassword(user.getPassword(), existingUser.getPassword())) {
-                    session.setAttribute("user", existingUser); // Storing user object in a session
+                    session.setAttribute("user", existingUser);
                     logger.info("session " + session.getAttribute("user").toString());
                     Map<String, Object> responseData = new HashMap<>();
                     responseData.put("user", existingUser);
@@ -108,7 +104,7 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
-        session.invalidate(); // Invalide la session
+        session.invalidate();
         return ResponseEntity.ok("Déconnexion réussie");
     }
 
