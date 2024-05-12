@@ -13,7 +13,7 @@ services:
     image: grafana/grafana:9.5.2
     container_name: grafana
     ports:
-      - "3003:3003"
+      - "3006:3006"
     restart: unless-stopped
     volumes:
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources

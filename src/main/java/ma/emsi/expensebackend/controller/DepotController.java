@@ -2,7 +2,6 @@ package ma.emsi.expensebackend.controller;
 
 import ma.emsi.expensebackend.entity.Depot;
 import ma.emsi.expensebackend.service.impl.DepotFacadeImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +10,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/depot")
 public class DepotController {
-    @Autowired
-    public DepotFacadeImpl depotFacadeImpl;
+    public final DepotFacadeImpl depotFacadeImpl;
+
+    public DepotController(DepotFacadeImpl depotFacadeImpl) {
+        this.depotFacadeImpl = depotFacadeImpl;
+    }
+
     @PostMapping("/{userId}")
     public ResponseEntity<Depot> createDepot(@RequestBody Depot depot, @PathVariable Long userId) {
         Depot savedDepot = depotFacadeImpl.saveDepot(depot, userId);
