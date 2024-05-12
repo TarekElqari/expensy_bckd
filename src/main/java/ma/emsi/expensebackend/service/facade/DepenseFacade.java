@@ -9,4 +9,5 @@ public interface DepenseFacade {
     Depense updateDepense(Depense depense);
     List<Depense> getAllDepenses();
 	Depense ajouterDepense(Depense depense, Long id);
+	List<Depense> getDepensesByUserId(Long userId);
 }
