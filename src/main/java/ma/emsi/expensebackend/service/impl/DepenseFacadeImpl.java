@@ -62,5 +62,11 @@ public class DepenseFacadeImpl implements DepenseFacade {
         budgetFacadeImpl.updateBudget(budget);
         return depenseRepository.save(depense);
     }
+    
+    @Override
+    public List<Depense> getDepensesByUserId(Long userId) {
+        return depenseRepository.findByUserId(userId);
+    }
+
 
 }

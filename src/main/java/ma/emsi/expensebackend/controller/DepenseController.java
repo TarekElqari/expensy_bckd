@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -54,5 +56,20 @@ public class DepenseController {
         Depense nouvelleDepense = depenseFacadeImpl.ajouterDepense(depense, userId);
         return ResponseEntity.ok().body(nouvelleDepense);
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Depense>> getDepensesByUserId(@PathVariable Long userId) {
+        List<Depense> depenses = depenseFacadeImpl.getAllDepenses();
+        List<Depense> depensesOfUser = new ArrayList<>();
+        for(Depense dep : depenses) {
+        	if(dep.getUser().getId().equals(userId)) {
+        	depensesOfUser.add(dep);}
+        }
+        return new ResponseEntity<>(depensesOfUser, HttpStatus.OK);
+    }
+    
+    
+
+    
+
     
 }
