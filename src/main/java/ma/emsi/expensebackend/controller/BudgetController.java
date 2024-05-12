@@ -1,31 +1,22 @@
 package ma.emsi.expensebackend.controller;
 
 import ma.emsi.expensebackend.entity.Budget;
-import ma.emsi.expensebackend.entity.User;
 import ma.emsi.expensebackend.service.impl.BudgetFacadeImpl;
-import ma.emsi.expensebackend.service.impl.UserFacadeImpl;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpSession;
-
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
 @RequestMapping("/api/v1/budget")
 public class BudgetController {
-    @Autowired
-    public BudgetFacadeImpl budgetFacadeImpl;
+    public final BudgetFacadeImpl budgetFacadeImpl;
 
-    private static final Logger logger = LoggerFactory.getLogger(BudgetFacadeImpl.class);
+    public BudgetController(BudgetFacadeImpl budgetFacadeImpl) {
+        this.budgetFacadeImpl = budgetFacadeImpl;
+    }
 
     @PostMapping
     public ResponseEntity<Budget> createBudget(@RequestBody Budget budget) {
@@ -36,7 +27,6 @@ public class BudgetController {
         Budget savedBudget = budgetFacadeImpl.ajouterBudget(budget);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedBudget);
     }
-
 
 
     @DeleteMapping("/{id}")
@@ -79,9 +69,4 @@ public class BudgetController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
-    
-    
-
 }

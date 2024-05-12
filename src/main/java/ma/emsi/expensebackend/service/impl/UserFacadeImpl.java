@@ -3,8 +3,6 @@ package ma.emsi.expensebackend.service.impl;
 import ma.emsi.expensebackend.entity.User;
 import ma.emsi.expensebackend.repository.UserRepository;
 import ma.emsi.expensebackend.service.facade.UserFacade;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +14,6 @@ import org.slf4j.LoggerFactory;
 @Service
 public class UserFacadeImpl implements UserFacade {
 
-    @Autowired
     private final UserRepository userRepository;
     
     private static final Logger logger = LoggerFactory.getLogger(UserFacadeImpl.class);
@@ -45,27 +42,25 @@ public class UserFacadeImpl implements UserFacade {
     public List<User> getAll() {
         return userRepository.findAll();
     }
-    
+
     public Optional<User> getUserByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
-            logger.info("Found user(s) with username: " + username+"id"+user.get());
+            logger.info("Found user with username: {} and id: {}", username, user.get().getId());
         } else {
-            logger.info("No user found with username: " + username);
+            logger.info("No user found with username: {}", username);
         }
         return user;
     }
-    
+
     @Override
     public Optional<User> getUserById(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
-            logger.info("Found user(s) with id: " + userId);
+            logger.info("Found user with id: {}", userId);
         } else {
-            logger.info("No user found with id: " + userId);
+            logger.info("No user found with id: {}", userId);
         }
         return user;
     }
-
-
 }

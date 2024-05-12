@@ -2,7 +2,6 @@ package ma.emsi.expensebackend.controller;
 
 import ma.emsi.expensebackend.entity.Categorie;
 import ma.emsi.expensebackend.service.impl.CategorieFacadeImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +11,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/categorie")
 public class CategorieController {
-    @Autowired
-    public CategorieFacadeImpl categorieFacadeImpl;
+    public final CategorieFacadeImpl categorieFacadeImpl;
+
+    public CategorieController(CategorieFacadeImpl categorieFacadeImpl) {
+        this.categorieFacadeImpl = categorieFacadeImpl;
+    }
 
     @PostMapping
     public ResponseEntity<Categorie> createCategorie(@RequestBody Categorie categorie) {

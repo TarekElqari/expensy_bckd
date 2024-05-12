@@ -51,10 +51,10 @@ public class BudgetFacadeImpl implements BudgetFacade {
 //        if (dateDepot.isBefore(LocalDate.now())) {
 //            throw new IllegalArgumentException("La date de dépôt du budget doit être dans le futur.");
 //        }
+
         
         return budgetRepository.save(budget);
     }
-
 
     @Override
     public Budget findFirstByOrderById() {

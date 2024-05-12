@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import ma.emsi.expensebackend.entity.Budget;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ma.emsi.expensebackend.entity.Depot;
 import ma.emsi.expensebackend.repository.DepotRepository;
@@ -13,10 +12,7 @@ import ma.emsi.expensebackend.service.facade.DepotFacade;
 @Service
 public class DepotFacadeImpl implements DepotFacade {
 
-    @Autowired
     private final DepotRepository depotRepository;
-
-    @Autowired
     private final BudgetFacadeImpl budgetFacadeImpl;
 
     public DepotFacadeImpl(DepotRepository depotRepository, BudgetFacadeImpl budgetFacadeImpl) {

@@ -3,7 +3,6 @@ package ma.emsi.expensebackend.controller;
 import ma.emsi.expensebackend.entity.User;
 import ma.emsi.expensebackend.utils.PasswordHashingService;
 import ma.emsi.expensebackend.service.impl.UserFacadeImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,15 +22,18 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
-    @Autowired
-    public UserFacadeImpl userFacadeImpl;
+    public final UserFacadeImpl userFacadeImpl;
 
-    @Autowired
-    private PasswordHashingService passwordHashingService;
+    private final PasswordHashingService passwordHashingService;
     
-    private static final Logger logger = LoggerFactory.getLogger(UserFacadeImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    
+    public UserController(UserFacadeImpl userFacadeImpl, PasswordHashingService passwordHashingService) {
+        this.userFacadeImpl = userFacadeImpl;
+        this.passwordHashingService = passwordHashingService;
+    }
+
+
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
@@ -80,12 +82,12 @@ public class UserController {
     public ResponseEntity<Object> loginUser(@RequestBody User user, HttpSession session) {
         Optional<User> optionalUser = userFacadeImpl.getUserByUsername(user.getUsername());
         if (optionalUser.isPresent()) {
-            logger.info("User found: " + user.getUsername());
+            logger.info("User found: {}", user.getUsername());
             User existingUser = optionalUser.get();
             try {
                 if (passwordHashingService.verifyPassword(user.getPassword(), existingUser.getPassword())) {
                     session.setAttribute("user", existingUser);
-                    logger.info("session " + session.getAttribute("user").toString());
+                    logger.info("session: {}", session.getAttribute("user"));
                     Map<String, Object> responseData = new HashMap<>();
                     responseData.put("user", existingUser);
                     responseData.put("message", "Connexion réussie");
@@ -97,7 +99,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur de hachage du mot de passe");
             }
         } else {
-            logger.info("No user found with username: " + user.getUsername());
+            logger.info("No user found with username: {}", user.getUsername());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur non trouvé");
         }
     }

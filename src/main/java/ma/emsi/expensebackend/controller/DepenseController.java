@@ -1,9 +1,7 @@
 package ma.emsi.expensebackend.controller;
 
 import ma.emsi.expensebackend.entity.Depense;
-import ma.emsi.expensebackend.entity.Depot;
 import ma.emsi.expensebackend.service.impl.DepenseFacadeImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +12,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/depense")
 public class DepenseController {
-    @Autowired
-    public DepenseFacadeImpl depenseFacadeImpl;
+    public final DepenseFacadeImpl depenseFacadeImpl;
+
+    public DepenseController(DepenseFacadeImpl depenseFacadeImpl) {
+        this.depenseFacadeImpl = depenseFacadeImpl;
+    }
 
     @PostMapping("/{userId}")
     public ResponseEntity<Depense> createDepense(@RequestBody Depense depense, @PathVariable Long userId) {
@@ -52,7 +53,7 @@ public class DepenseController {
        return depenseFacadeImpl.getAllDepenses();
     }
     @PostMapping("/ajouter/{userId}")
-    public ResponseEntity<Depense> ajouterDepense(@RequestBody Depense depense, Long userId) {
+    public ResponseEntity<Depense> ajouterDepense(@RequestBody Depense depense, @PathVariable Long userId) {
         Depense nouvelleDepense = depenseFacadeImpl.ajouterDepense(depense, userId);
         return ResponseEntity.ok().body(nouvelleDepense);
     }
