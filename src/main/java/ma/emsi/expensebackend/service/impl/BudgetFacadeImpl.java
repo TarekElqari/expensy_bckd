@@ -47,10 +47,11 @@ public class BudgetFacadeImpl implements BudgetFacade {
         }
 
         // Vérifier si la date de dépôt est valide (par exemple, ne pas être dans le passé)
-        LocalDate dateDepot = budget.getDateDepot();
-        if (dateDepot.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La date de dépôt du budget doit être dans le futur.");
-        }
+//        LocalDate dateDepot = budget.getDateDepot();
+//        if (dateDepot.isBefore(LocalDate.now())) {
+//            throw new IllegalArgumentException("La date de dépôt du budget doit être dans le futur.");
+//        }
+
         
         return budgetRepository.save(budget);
     }
